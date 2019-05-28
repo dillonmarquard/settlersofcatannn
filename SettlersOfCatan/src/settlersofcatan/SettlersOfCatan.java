@@ -26,6 +26,15 @@ public class SettlersOfCatan {
         Graphics g = gui.canvas.getGraphics();
         while (true) {
             if (gui.gamestate == 1) {
+                // debug
+                for(int i = 0; i < 6; i++){
+                    System.out.println(gui.game.players[0].tradingports[i]);
+                }
+                System.out.println("");
+                for(int x = 0; x < 5; x++){
+                    gui.game.players[0].resources[x] = 10; // 0(3:1 any), 1(2:1 wood), 2(2:1 sheep), 3(2:1 wheat), 4(2:1 brick), 5(2:1 ore) 
+                }
+                //
                 gui.game.render(g);
                 // selected hex gui
                 if (gui.game.selectedHexIndex != -1) {

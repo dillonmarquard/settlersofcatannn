@@ -646,6 +646,7 @@ public class GUI extends javax.swing.JFrame {
             this.txtConsole.setText("must roll before trading");
             return;
         }
+        this.game.checkPortTrade();
     }//GEN-LAST:event_jButton9ActionPerformed
 
     public static void main(String args[]) {

@@ -6,6 +6,7 @@ public class Player {
     int[] resources = new int[5]; //  0 wood, 1 sheep, 2 wheat, 3 brick, 4 ore
     int[] developmentcards = new int[3]; // 0 Knight, 1 Progress, 2 Victory Point
     int[] useddevelopmentcards = new int[3]; // 0 Knight, 1 Progress, 2 Victory Point
+    int[] tradingports = new int[6]; // 0(3:1 any), 1(2:1 wood), 2(2:1 sheep), 3(2:1 wheat), 4(2:1 brick), 5(2:1 ore) 
     
     int victorypoints;
     int yourturncount = 1;

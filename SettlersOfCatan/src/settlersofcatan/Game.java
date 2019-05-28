@@ -6,11 +6,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 public class Game {
 
@@ -48,7 +46,12 @@ public class Game {
 
     boolean robberSelected = false;
 
-    Image port;
+    Image port0;
+    Image port1;
+    Image port2;
+    Image port3;
+    Image port4;
+    Image port5;
     Image wood;
     Image sheep;
     Image wheat;
@@ -156,7 +159,7 @@ public class Game {
 
     public void interpretAction(double x, double y) {
         // add robber check before other tiles
-        if(!this.players[this.yourindex].hasRolled && this.players[this.yourindex].yourturncount > 2){
+        if (!this.players[this.yourindex].hasRolled && this.players[this.yourindex].yourturncount > 2) {
             gui.txtConsole.setText("must roll before building");
             return;
         }
@@ -1200,7 +1203,7 @@ public class Game {
     }
 
     public void dealResources(int roll) {
-        if(roll == 7){
+        if (roll == 7) {
             this.players[this.yourindex].hasRobber = true;
             return;
         }
@@ -1208,7 +1211,7 @@ public class Game {
             if (i == robber.indexlocation) {
                 continue;
             }
-            if(this.gameboard[i].roll != roll){
+            if (this.gameboard[i].roll != roll) {
                 continue;
             }
             for (int j = 0; j < 12; j++) {
@@ -1330,6 +1333,7 @@ public class Game {
         g.drawImage(getImage(this.portarray[6].tile), (659 / 2) - 50 + 100 + 5 + 100 + 5, (569 / 2) - 50 + 160, 100, 100, null);
         g.drawImage(getImage(this.portarray[7].tile), (659 / 2) - 50 + 100 + 5 - 200 - 10 - 50 - 5 + 2, (569 / 2) + 50 + 140, 100, 100, null);
         g.drawImage(getImage(this.portarray[8].tile), (659 / 2) + 3, (569 / 2) - 50 + 75 + 5 + 160, 100, 100, null);
+
         // tile roll
         g.setFont(new Font("TimesRoman", Font.PLAIN, 18));
         for (int i = 0; i < 19; i++) {
@@ -1370,8 +1374,7 @@ public class Game {
                 }
             }
         }
-        // cities
-        // settlements
+        // settlements & cities
         for (int i = 0; i < 19; i++) {
             for (int j = 0; j < 12; j++) {
                 if (this.gameboard[i].tileData[j] > 0) {
@@ -1517,8 +1520,23 @@ public class Game {
         if (tile == "desert") {
             return this.desert;
         }
-        if (tile == "port") {
-            return this.port;
+        if (tile == "port0") {
+            return this.port0;
+        }
+        if (tile == "port1") {
+            return this.port1;
+        }
+        if (tile == "port2") {
+            return this.port2;
+        }
+        if (tile == "port3") {
+            return this.port3;
+        }
+        if (tile == "port4") {
+            return this.port4;
+        }
+        if (tile == "port5") {
+            return this.port5;
         }
         // buildings
         if (tile == "settlement1") {
@@ -1563,8 +1581,12 @@ public class Game {
             this.wheat = ImageIO.read(getClass().getClassLoader().getResource("images/wheat.png"));
             this.ore = ImageIO.read(getClass().getClassLoader().getResource("images/stone.png"));
             this.desert = ImageIO.read(getClass().getClassLoader().getResource("images/desert.png"));
-            this.port = ImageIO.read(getClass().getClassLoader().getResource("images/port.png"));
-
+            this.port0 = ImageIO.read(getClass().getClassLoader().getResource("images/port0.png"));
+            this.port1 = ImageIO.read(getClass().getClassLoader().getResource("images/port1.png"));
+            this.port2 = ImageIO.read(getClass().getClassLoader().getResource("images/port2.png"));
+            this.port3 = ImageIO.read(getClass().getClassLoader().getResource("images/port3.png"));
+            this.port4 = ImageIO.read(getClass().getClassLoader().getResource("images/port4.png"));
+            this.port5 = ImageIO.read(getClass().getClassLoader().getResource("images/port5.png"));
             this.settlement1 = ImageIO.read(getClass().getClassLoader().getResource("images/settlement1.png"));
             this.settlement2 = ImageIO.read(getClass().getClassLoader().getResource("images/settlement2.png"));
             this.settlement3 = ImageIO.read(getClass().getClassLoader().getResource("images/settlement3.png"));
@@ -1645,109 +1667,1043 @@ public class Game {
     }
 
     void setPorts() {
-        int[] portType = new int[]{0, 0, 0, 0, 1, 2, 3, 4, 5}; // 0(3:1 any), 1(2:1 wood), 2(2:1 sheep), 3(2:1 wheat), 4(2:1 brick), 5(2:1 ore)
+        String[] portType = new String[]{"port0", "port0", "port0", "port0", "port1", "port2", "port3", "port4", "port5"}; // 0(3:1 any), 1(2:1 wood), 2(2:1 sheep), 3(2:1 wheat), 4(2:1 brick), 5(2:1 ore)
         for (int i = 0; i < 9; i++) {
             this.portarray[i] = new Tile();
-            this.portarray[i].setTile("port");
         }
         int index;
 
         while (true) {
             index = (int) Math.floor(Math.random() * 9);
-            if (portType[index] != -1) {
+            if (portType[index] != "") {
                 this.portarray[0].setTile(portType[index]);
                 this.gameboard[0].neighborTiles[0] = this.portarray[0];
-                portType[index] = -1;
+                portType[index] = "";
                 break;
             }
         }
         while (true) {
             index = (int) Math.floor(Math.random() * 9);
-            if (portType[index] != -1) {
+            if (portType[index] != "") {
                 this.portarray[1].setTile(portType[index]);
-                this.gameboard[1].neighborTiles[1] = this.portarray[1];
-                this.gameboard[2].neighborTiles[0] = this.portarray[1];
-                portType[index] = -1;
+                //this.gameboard[1].neighborTiles[1] = this.portarray[1];
+                //this.gameboard[2].neighborTiles[0] = this.portarray[1];
+                portType[index] = "";
                 break;
             }
         }
         while (true) {
             index = (int) Math.floor(Math.random() * 9);
-            if (portType[index] != -1) {
+            if (portType[index] != "") {
                 this.portarray[2].setTile(portType[index]);
-                this.gameboard[2].neighborTiles[2] = this.portarray[2];
-                this.gameboard[6].neighborTiles[1] = this.portarray[2];
-                portType[index] = -1;
+                //this.gameboard[2].neighborTiles[2] = this.portarray[2];
+                //this.gameboard[6].neighborTiles[1] = this.portarray[2];
+                portType[index] = "";
                 break;
             }
         }
         while (true) {
             index = (int) Math.floor(Math.random() * 9);
-            if (portType[index] != -1) {
+            if (portType[index] != "") {
                 this.portarray[3].setTile(portType[index]);
-                this.gameboard[3].neighborTiles[5] = this.portarray[3];
-                this.gameboard[7].neighborTiles[0] = this.portarray[3];
-                portType[index] = -1;
+                //this.gameboard[3].neighborTiles[5] = this.portarray[3];
+                //this.gameboard[7].neighborTiles[0] = this.portarray[3];
+                portType[index] = "";
                 break;
             }
         }
         while (true) {
             index = (int) Math.floor(Math.random() * 9);
-            if (portType[index] != -1) {
+            if (portType[index] != "") {
                 this.portarray[4].setTile(portType[index]);
-                this.gameboard[11].neighborTiles[2] = this.portarray[4];
-                portType[index] = -1;
+                //this.gameboard[11].neighborTiles[2] = this.portarray[4];
+                portType[index] = "";
                 break;
             }
         }
         while (true) {
             index = (int) Math.floor(Math.random() * 9);
-            if (portType[index] != -1) {
+            if (portType[index] != "") {
                 this.portarray[5].setTile(portType[index]);
-                this.gameboard[7].neighborTiles[4] = this.portarray[5];
-                this.gameboard[12].neighborTiles[5] = this.portarray[5];
-                portType[index] = -1;
+                //this.gameboard[7].neighborTiles[4] = this.portarray[5];
+                //this.gameboard[12].neighborTiles[5] = this.portarray[5];
+                portType[index] = "";
                 break;
             }
         }
         while (true) {
             index = (int) Math.floor(Math.random() * 9);
-            if (portType[index] != -1) {
+            if (portType[index] != "") {
                 this.portarray[6].setTile(portType[index]);
-                this.gameboard[15].neighborTiles[3] = this.portarray[6];
-                this.gameboard[18].neighborTiles[2] = this.portarray[6];
-                portType[index] = -1;
+                //this.gameboard[15].neighborTiles[3] = this.portarray[6];
+                //this.gameboard[18].neighborTiles[2] = this.portarray[6];
+                portType[index] = "";
                 break;
             }
         }
         while (true) {
             index = (int) Math.floor(Math.random() * 9);
-            if (portType[index] != -1) {
+            if (portType[index] != "") {
                 this.portarray[7].setTile(portType[index]);
-                this.gameboard[16].neighborTiles[4] = this.portarray[7];
-                portType[index] = -1;
+                //this.gameboard[16].neighborTiles[4] = this.portarray[7];
+                portType[index] = "";
                 break;
             }
         }
         while (true) {
             index = (int) Math.floor(Math.random() * 9);
-            if (portType[index] != -1) {
+            if (portType[index] != "") {
                 this.portarray[8].setTile(portType[index]);
-                this.gameboard[17].neighborTiles[3] = this.portarray[8];
-                this.gameboard[18].neighborTiles[4] = this.portarray[8];
-                portType[index] = -1;
+                //this.gameboard[17].neighborTiles[3] = this.portarray[8];
+                //this.gameboard[18].neighborTiles[4] = this.portarray[8];
+                portType[index] = "";
                 break;
+            }
+        }
+    }
+
+    public void checkPortTrade() {
+        int index = 0;
+        //
+        if(this.gameboard[0].tileData[0] > 0){
+            switch(this.portarray[0].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[0].tileData[0]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[0].tileData[10] > 0){
+            switch(this.portarray[0].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[0].tileData[10]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[1].tileData[0] > 0){
+            switch(this.portarray[1].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[1].tileData[0]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[1].tileData[2] > 0){
+            switch(this.portarray[1].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[1].tileData[2]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[6].tileData[0] > 0){
+            switch(this.portarray[2].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[6].tileData[0]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[6].tileData[2] > 0){
+            switch(this.portarray[2].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[6].tileData[2]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[3].tileData[10] > 0){
+            switch(this.portarray[3].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[3].tileData[10]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[3].tileData[10] > 0){
+            switch(this.portarray[3].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[3].tileData[10]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[3].tileData[8] > 0){
+            switch(this.portarray[3].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[3].tileData[8]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[11].tileData[4] > 0){
+            switch(this.portarray[4].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[11].tileData[4]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[11].tileData[2] > 0){
+            switch(this.portarray[4].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[11].tileData[2]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[12].tileData[10] > 0){
+            switch(this.portarray[5].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[12].tileData[10]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[12].tileData[8] > 0){
+            switch(this.portarray[5].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[12].tileData[8]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[15].tileData[4] > 0){
+            switch(this.portarray[6].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[15].tileData[4]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[15].tileData[6] > 0){
+            switch(this.portarray[6].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[15].tileData[6]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[16].tileData[8] > 0){
+            switch(this.portarray[7].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[16].tileData[8]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[16].tileData[6] > 0){
+            switch(this.portarray[7].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[16].tileData[6]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[17].tileData[4] > 0){
+            switch(this.portarray[8].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[17].tileData[4]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+            }
+        }
+        //
+        if(this.gameboard[17].tileData[6] > 0){
+            switch(this.portarray[8].tile){
+                case "port0":
+                    index = 0;
+                    break;
+                case "port1":
+                    index = 1;
+                    break;
+                case "port2":
+                    index = 2;
+                    break;
+                case "port3":
+                    index = 3;
+                    break;
+                case "port4":
+                    index = 4;
+                    break;
+                case "port5":
+                    index = 5;
+                    break;
+            }
+            switch(this.gameboard[17].tileData[6]){
+                case 1:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 2:
+                    this.players[0].tradingports[index] = 1;
+                    break;
+                case 4:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 5:
+                    this.players[1].tradingports[index] = 1;
+                    break;
+                case 7:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 8:
+                    this.players[2].tradingports[index] = 1;
+                    break;
+                case 10:
+                    this.players[3].tradingports[index] = 1;
+                    break;
+                case 11:
+                    this.players[3].tradingports[index] = 1;
+                    break;
             }
         }
     }
 
     void setNeighbors() {
         // index based 
-        // 0 neighbors are null,null,1,4,3,null
+        // 0 neighbors are port,null,1,4,3,null
         this.gameboard[0].neighborTiles[2] = this.gameboard[1];
         this.gameboard[0].neighborTiles[3] = this.gameboard[4];
         this.gameboard[0].neighborTiles[4] = this.gameboard[3];
-        // 1 neighbors are null,null,2,5,4,0
+        // 1 neighbors are null,port,2,5,4,0
         this.gameboard[1].neighborTiles[2] = this.gameboard[2];
         this.gameboard[1].neighborTiles[3] = this.gameboard[5];
         this.gameboard[1].neighborTiles[4] = this.gameboard[4];
@@ -1776,6 +2732,7 @@ public class Game {
         this.gameboard[5].neighborTiles[4] = this.gameboard[9];
         this.gameboard[5].neighborTiles[5] = this.gameboard[4];
         // 6 neighbors are 2,null,null,11,10,5
+        this.gameboard[6].neighborTiles[1] = this.portarray[2];
         this.gameboard[6].neighborTiles[0] = this.gameboard[2];
         this.gameboard[6].neighborTiles[3] = this.gameboard[11];
         this.gameboard[6].neighborTiles[4] = this.gameboard[10];
@@ -1805,7 +2762,7 @@ public class Game {
         this.gameboard[10].neighborTiles[3] = this.gameboard[15];
         this.gameboard[10].neighborTiles[4] = this.gameboard[14];
         this.gameboard[10].neighborTiles[5] = this.gameboard[9];
-        // 11 neighbors are 6,null,null,null,15,10
+        // 11 neighbors are 6,null,port,null,15,10
         this.gameboard[11].neighborTiles[0] = this.gameboard[6];
         this.gameboard[11].neighborTiles[4] = this.gameboard[15];
         this.gameboard[11].neighborTiles[5] = this.gameboard[10];
